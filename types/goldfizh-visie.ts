@@ -34,6 +34,18 @@ export type GoldfizhVisieDocument = {
     message_hierarchy: string[];
     ai_and_automation: string[];
   };
+  image_generation_policy?: {
+    owner: string;
+    role_summary: string;
+    visual_authority: string;
+    never_in_generated_images: string[];
+    agency_reference_only?: string[];
+  };
+  professional_safeguard?: {
+    purpose: string;
+    must_avoid: string[];
+    quality_floor: string[];
+  };
   editorial_context?: {
     use: string;
     accuracy_note: string;

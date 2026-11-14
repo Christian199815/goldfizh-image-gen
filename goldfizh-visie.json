@@ -113,8 +113,41 @@
       "Optimise digital content and platforms for discoverability and clarity for both people and AI systems."
     ]
   },
+  "image_generation_policy": {
+    "owner": "Goldfizh",
+    "role_summary": "Goldfizh owns and operates this image generator. Outputs are client marketing assets—not Goldfizh agency campaigns.",
+    "visual_authority": "Look, mood, palette, typography feel and composition come from the active client brand, the user's request, page context and selected creative direction. Goldfizh does not apply its own brand identity or tone of voice to generated pixels.",
+    "never_in_generated_images": [
+      "Goldfizh name, logo, wordmark, favicon or monogram",
+      "Goldfizh tagline, slogans, employer-brand lines or Goldfizh campaign creative",
+      "Goldfizh corporate colour system, typography or website art direction as the dominant visual language",
+      "Scenes that read primarily as Goldfizh office, team, or agency self-promotion unless explicitly requested for rare internal use",
+      "Framing that suggests the image is official Goldfizh branding rather than the client's brand"
+    ],
+    "agency_reference_only": [
+      "Fields such as brand, brand_pillars, tone_of_voice, working_method and content_principles describe Goldfizh as a company for documentation and governance. They must not be translated into client image styling."
+    ]
+  },
+  "professional_safeguard": {
+    "purpose": "Goldfizh's only active layer in image generation is a professional reputational and suitability check—not creative direction from Goldfizh's own brand.",
+    "must_avoid": [
+      "Offensive, hateful, discriminatory, harassing or sexually explicit imagery",
+      "Graphic violence, gore or shock content without clear, defensible editorial purpose",
+      "Childish, juvenile, slapstick or meme aesthetics that undermine professional client marketing",
+      "Illegal activity, substance abuse glamorisation or dangerous behaviour presented positively",
+      "Misleading product claims, counterfeit branding or impersonation of other companies",
+      "Non-consensual likeness of identifiable real people or deepfake-style portraits of public figures",
+      "Imagery that could reasonably embarrass the client or damage Goldfizh's reputation as the tool operator"
+    ],
+    "quality_floor": [
+      "Production-ready standard suitable for client websites, ads and social channels",
+      "No embedded text, logos or watermarks inside the frame unless the user or client brief explicitly requires them",
+      "Composition legible at thumbnail size when used in CMS and social previews",
+      "Prefer clear subject and intentional lighting; avoid cluttered or unreadable layouts"
+    ]
+  },
   "editorial_context": {
-    "use": "Use this file as brand context when developing and evaluating Goldfizh content.",
+    "use": "Use tone_of_voice and company narrative fields for Goldfizh's own communications and governance only. For client image generation, apply image_generation_policy and professional_safeguard—not Goldfizh visual branding.",
     "accuracy_note": "This JSON file is a structured interpretation and summary of Goldfizh's publicly available website. The brand vision and values are based on explicit statements from Goldfizh, while the tone-of-voice and content guidelines are derived from its communication style.",
     "sources": [
       {

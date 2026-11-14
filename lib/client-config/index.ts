@@ -44,14 +44,21 @@ function assertDemoClientId(raw: string): string {
   return raw;
 }
 
+function resolveProductionDemoClientId(): string {
+  const defaultId = supportedDemoClientIds[0];
+  if (!defaultId) {
+    throw new DemoClientConfigError("No demo client profiles are registered.");
+  }
+  return assertDemoClientId(defaultId);
+}
+
 /**
- * Active demo client id. In development, chosen via the dev panel (persisted under `.local/`).
+ * Active demo client id. With dev tools, chosen via the dev panel (persisted under `.local/`).
+ * Without dev tools (e.g. Railway build), uses the first registered profile so prerender can finish.
  */
 export function resolveDemoClientId(): string {
   if (!isServerDevToolsEnabled()) {
-    throw new DemoClientConfigError(
-      "Demo client is only configurable via the dev panel during local development.",
-    );
+    return resolveProductionDemoClientId();
   }
 
   ensureDevDemoClientHydrated();

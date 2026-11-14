@@ -14,7 +14,7 @@ import type {
 
 export const PROMPT_SECTION = {
   userRequest: "1. User image request (primary creative intent)",
-  goldfizh: "2. Goldfizh global creative direction and quality",
+  goldfizh: "2. Goldfizh professional safeguard (operator—not visual brand)",
   brandPositioning: "3. Client brand positioning and personality",
   brandColors: "4. Brand colours and visual identity",
   photography: "5. Photography and composition guidelines",
@@ -87,35 +87,29 @@ export function buildUserRequestSection(imageRequest: string): string {
 }
 
 export function buildGoldfizhSection(goldfizh: GoldfizhContext): string {
-  const taglineBlock =
-    goldfizh.tagline?.trim()
-      ? `Agency tagline: ${goldfizh.tagline}`
-      : "";
-
-  const toneBlock =
-    goldfizh.toneTraits && goldfizh.toneTraits.length > 0
-      ? ["Tone of voice (reflect in mood and styling):", bulletLines(goldfizh.toneTraits)].join(
-          "\n",
-        )
-      : "";
-
   const avoidBlock =
     goldfizh.avoid && goldfizh.avoid.length > 0
-      ? ["Off-brand visual and mood patterns (always avoid):", bulletLines(goldfizh.avoid)].join(
-          "\n",
-        )
+      ? [
+          "Professional suitability (always avoid in client imagery):",
+          bulletLines(goldfizh.avoid),
+        ].join("\n")
+      : "";
+
+  const benchmarkBlock =
+    goldfizh.benchmarkPrinciples.length > 0
+      ? [
+          "Policy notes:",
+          bulletLines(goldfizh.benchmarkPrinciples),
+        ].join("\n")
       : "";
 
   return [
     PROMPT_SECTION.goldfizh,
-    "Official Goldfizh company vision — all client imagery must align with this agency layer:",
-    taglineBlock,
+    "Goldfizh operates this tool but its own branding and tone must not appear in generated images. Client brand and user intent drive look and mood.",
     goldfizh.creativeVision,
-    toneBlock,
-    "Image guidelines:",
+    "Safeguard rules:",
     bulletLines(goldfizh.imageGuidelines),
-    "Benchmark principles:",
-    bulletLines(goldfizh.benchmarkPrinciples),
+    benchmarkBlock,
     avoidBlock,
   ]
     .filter(Boolean)

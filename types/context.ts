@@ -1,4 +1,4 @@
-/** Agency-wide creative direction used when composing image prompts (from `goldfizh-visie.json`). */
+/** Goldfizh operator safeguard layer for image prompts (from `goldfizh-visie.json`; not client visual branding). */
 export interface GoldfizhContext {
   creativeVision: string;
   imageGuidelines: string[];

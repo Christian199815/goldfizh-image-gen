@@ -62,7 +62,7 @@ export const EXAMPLE_IMAGE_PROMPT = buildImagePrompt({
 
 const REQUIRED_SECTIONS = [
   "1. User image request (primary creative intent)",
-  "2. Goldfizh global creative direction and quality",
+  "2. Goldfizh professional safeguard (operator—not visual brand)",
   "3. Client brand positioning and personality",
   "4. Brand colours and visual identity",
   "5. Photography and composition guidelines",
@@ -95,10 +95,10 @@ export function assertPromptBuilderExample(): void {
 
   if (
     !EXAMPLE_IMAGE_PROMPT.includes(exampleInput.imageRequest) ||
-    !EXAMPLE_IMAGE_PROMPT.includes("Official Goldfizh company vision") ||
     !EXAMPLE_IMAGE_PROMPT.includes(
-      mockGoldfizhContext.tagline ?? "Powered by the new generation.",
+      "Goldfizh operates this tool but its own branding",
     ) ||
+    !EXAMPLE_IMAGE_PROMPT.includes("client marketing assets") ||
     !EXAMPLE_IMAGE_PROMPT.includes(exampleBrand.brandName) ||
     !EXAMPLE_IMAGE_PROMPT.includes(examplePage.description) ||
     !EXAMPLE_IMAGE_PROMPT.includes(exampleBrandSegment.label) ||
