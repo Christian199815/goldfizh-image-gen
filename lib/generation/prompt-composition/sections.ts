@@ -206,6 +206,28 @@ export function buildPageSection(page: PageContext): string {
   ].join("\n");
 }
 
+function describeStyleChoice(input: ImageGenerationInput): string {
+  if (input.style === "other") {
+    const custom = input.styleCustom.trim();
+    const detail = custom
+      ? `User-specified style: ${custom}.`
+      : "User chose a custom style without details.";
+    return `Visual style: other — ${detail} ${STYLE_GUIDANCE.other}`;
+  }
+  return `Visual style: ${input.style} — ${STYLE_GUIDANCE[input.style]}`;
+}
+
+function describeColorModeChoice(input: ImageGenerationInput): string {
+  if (input.colorMode === "other") {
+    const custom = input.colorModeCustom.trim();
+    const detail = custom
+      ? `User-specified color style: ${custom}.`
+      : "User chose a custom color style without details.";
+    return `Color style: other — ${detail} ${COLOR_MODE_GUIDANCE.other}`;
+  }
+  return `Color style: ${input.colorMode} — ${COLOR_MODE_GUIDANCE[input.colorMode]}`;
+}
+
 export function buildUserChoicesSection(
   input: ImageGenerationInput,
   client: ClientBrandContext,
@@ -213,8 +235,8 @@ export function buildUserChoicesSection(
   const mainColorLine = describeMainColor(input.mainColor, client);
   return [
     PROMPT_SECTION.choices,
-    `Style: ${input.style} — ${STYLE_GUIDANCE[input.style]}`,
-    `Color mode: ${input.colorMode} — ${COLOR_MODE_GUIDANCE[input.colorMode]}`,
+    describeStyleChoice(input),
+    describeColorModeChoice(input),
     `Main colour: ${mainColorLine}`,
     "These choices refine execution; they must not silently contradict mandatory brand rules or Goldfizh quality principles.",
   ].join("\n");

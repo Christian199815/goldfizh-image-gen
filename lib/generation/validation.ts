@@ -10,6 +10,7 @@ import {
 export const PAGE_ID_MAX_LENGTH = 128;
 export const BRAND_SEGMENT_MAX_LENGTH = 128;
 export const IMAGE_REQUEST_MAX_LENGTH = 2000;
+export const STYLE_CUSTOM_MAX_LENGTH = 200;
 
 const boundedNonEmptyString = (maxLength: number, field: string) =>
   z
@@ -67,12 +68,38 @@ export const imageGenerationInputSchema = z
       "brandSegment",
     ),
     style: imageStyleSchema,
+    styleCustom: boundedString(STYLE_CUSTOM_MAX_LENGTH, "styleCustom").default(
+      "",
+    ),
     colorMode: colorModeSchema,
+    colorModeCustom: boundedString(
+      STYLE_CUSTOM_MAX_LENGTH,
+      "colorModeCustom",
+    ).default(""),
     mainColor: mainColorSchema,
     format: imageFormatSchema,
     dev: devGenerationOptionsSchema.optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((data, ctx) => {
+    if (data.style === "other" && data.styleCustom.trim().length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "styleCustom is required when style is other",
+        path: ["styleCustom"],
+      });
+    }
+    if (
+      data.colorMode === "other" &&
+      data.colorModeCustom.trim().length === 0
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "colorModeCustom is required when colorMode is other",
+        path: ["colorModeCustom"],
+      });
+    }
+  });
 
 export type ImageGenerationInputParsed = z.infer<
   typeof imageGenerationInputSchema

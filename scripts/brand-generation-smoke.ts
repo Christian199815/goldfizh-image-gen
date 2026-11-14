@@ -34,7 +34,9 @@ async function main(): Promise<void> {
     imageRequest: IMAGE_REQUEST,
     pageId: page.id,
     style: "simple",
+    styleCustom: "",
     colorMode: "vibrant",
+    colorModeCustom: "",
     format: "landscape",
   };
 

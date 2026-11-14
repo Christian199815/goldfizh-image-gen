@@ -2,7 +2,7 @@
 
 import type { BrandColor } from "@/types/context";
 
-import { FormField, optionGroupClassName } from "./FormField";
+import { FormField } from "./FormField";
 
 const WHITE_SWATCH = "#FFFFFF";
 
@@ -46,7 +46,13 @@ export function MainColorPicker({
 
   return (
     <FormField id={GROUP_ID} label="Main color">
-      <div role="radiogroup" className={optionGroupClassName}>
+      <div
+        role="radiogroup"
+        className="grid w-full min-w-0 gap-2"
+        style={{
+          gridTemplateColumns: `repeat(${swatches.length}, minmax(0, 1fr))`,
+        }}
+      >
         {swatches.map((swatch) => {
           const selected = normalizeHex(value) === normalizeHex(swatch.hex);
           const isLight =
@@ -62,9 +68,9 @@ export function MainColorPicker({
               title={swatch.label}
               disabled={disabled}
               onClick={() => onChange(swatch.hex)}
-              className={`relative h-10 w-10 rounded-full border-2 transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gf-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${
+              className={`relative mx-auto aspect-square w-full max-h-10 max-w-10 rounded-full border-2 transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gf-brand focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60 ${
                 selected
-                  ? "border-gf-brand ring-2 ring-gf-brand ring-offset-2"
+                  ? "border-gf-brand ring-2 ring-gf-brand ring-offset-1"
                   : isLight
                     ? "border-gf-panel-border"
                     : "border-transparent"

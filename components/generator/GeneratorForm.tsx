@@ -90,14 +90,22 @@ export function GeneratorForm({
 
         <StyleSelector
           value={values.style}
+          styleCustom={values.styleCustom}
           disabled={controlsDisabled}
           onChange={(style) => setField("style", style)}
+          onStyleCustomChange={(styleCustom) =>
+            setField("styleCustom", styleCustom)
+          }
         />
 
         <ColorModeSelector
           value={values.colorMode}
+          colorModeCustom={values.colorModeCustom}
           disabled={controlsDisabled}
           onChange={(colorMode) => setField("colorMode", colorMode)}
+          onColorModeCustomChange={(colorModeCustom) =>
+            setField("colorModeCustom", colorModeCustom)
+          }
         />
 
         <MainColorPicker

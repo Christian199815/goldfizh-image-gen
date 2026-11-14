@@ -34,7 +34,11 @@ export interface ImageGenerationInput {
   pageId: string;
   brandSegment: string;
   style: ImageStyle;
+  /** Free-text style when `style` is `other`. */
+  styleCustom: string;
   colorMode: ColorMode;
+  /** Free-text color treatment when `colorMode` is `other`. */
+  colorModeCustom: string;
   mainColor: string;
   format: ImageFormat;
   dev?: DevGenerationOptions;

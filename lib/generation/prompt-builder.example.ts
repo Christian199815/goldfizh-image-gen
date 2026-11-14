@@ -15,7 +15,9 @@ const exampleInput: ImageGenerationInput = {
   pageId: "home-hero",
   brandSegment: "evening-ritual",
   style: "simple",
+  styleCustom: "",
   colorMode: "vibrant",
+  colorModeCustom: "",
   mainColor: "#2F5D50",
   format: "landscape",
 };

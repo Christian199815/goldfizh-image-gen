@@ -22,7 +22,9 @@ export function buildInitialFormState(
     pageId: pages[0]?.id ?? "",
     brandSegment: brandSegments[0]?.id ?? "",
     style: "simple",
+    styleCustom: "",
     colorMode: "vibrant",
+    colorModeCustom: "",
     mainColor: getDefaultMainColor(brandColors),
     format: "square",
   };
@@ -83,7 +85,10 @@ export function useGeneratorForm(
     values.pageId.length > 0 &&
     values.brandSegment.length > 0 &&
     pages.length > 0 &&
-    brandSegments.length > 0;
+    brandSegments.length > 0 &&
+    (values.style !== "other" || values.styleCustom.trim().length > 0) &&
+    (values.colorMode !== "other" ||
+      values.colorModeCustom.trim().length > 0);
 
   return { values, setField, canSubmit };
 }

@@ -15,7 +15,9 @@ const baseInput: Omit<ImageGenerationInput, "mainColor" | "brandSegment"> = {
   imageRequest: BRAND_TEST_IMAGE_REQUEST,
   pageId: mockPages[0]?.id ?? "home-hero",
   style: "simple",
+  styleCustom: "",
   colorMode: "vibrant",
+  colorModeCustom: "",
   format: "landscape",
 };
 
