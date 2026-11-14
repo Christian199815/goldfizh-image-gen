@@ -1,0 +1,135 @@
+{
+  "brand": {
+    "name": "Goldfizh",
+    "tagline": "Powered by the new generation.",
+    "positioning": "A digital agency that connects strategy, creativity and technology to help organisations grow."
+  },
+  "core_values": [
+    {
+      "name": "iGen",
+      "meaning": "Actively monitor, evaluate and apply digital developments whenever they add value."
+    }
+  ],
+  "brand_pillars": [
+    {
+      "name": "Strategy",
+      "description": "A clear direction based on organisational goals, target audiences, market dynamics and long-term ambitions."
+    },
+    {
+      "name": "Creativity",
+      "description": "Distinctive campaigns, content, concepts and experiences that inspire and engage people."
+    },
+    {
+      "name": "Technology & AI",
+      "description": "Websites, platforms, applications, automation and AI solutions that address real needs."
+    },
+    {
+      "name": "Data & Performance",
+      "description": "Using insights, measurement and optimisation to improve effectiveness and drive growth."
+    },
+    {
+      "name": "Collaboration",
+      "description": "Strategists, marketers, developers, designers, producers and client teams working together towards shared goals."
+    }
+  ],
+  "services": [
+    "Digital Marketing",
+    "Content Marketing",
+    "Technology & AI",
+    "Customer Transformation / Digital Change",
+    "Video & Motion",
+    "Branding & Brand Identity",
+    "Web Design & UX/UI",
+    "Web Development",
+    "Platform & Application Development",
+    "SEO & AI Search",
+    "Data, Performance & CRO",
+    "Digital Accessibility",
+    "Agentic AI & Automation",
+    "Interim Services"
+  ],
+  "working_method": [
+    {
+      "phase": "Research",
+      "principle": "Think big, keep it simple.",
+      "description": "Explore goals, target audiences, existing tech stacks, architecture and data. Establish a solid foundation before shaping the solution."
+    },
+    {
+      "phase": "Discovery",
+      "principle": "Strategy that connects with your market.",
+      "description": "Gain a deeper understanding of the organisation, stakeholders, target audience, technical requirements and marketing objectives. Where appropriate, start with an assessment, workshop or pilot and define the requirements together. The order of priority: security, productivity and then user experience."
+    },
+    {
+      "phase": "Build",
+      "principle": "From problem to solution, sprint by sprint.",
+      "description": "Build iteratively and AI-native. Bring user flows, wireframes and working code together in short sprints. Focus on solutions that people can actually use."
+    },
+    {
+      "phase": "Grow",
+      "principle": "Go-live is the starting point, not the finish line.",
+      "description": "Measure the baseline, analyse performance and continuously test and optimise. Use data to determine the next steps and empower client teams to move forward independently."
+    }
+  ],
+  "tone_of_voice": {
+    "description": "The website communicates in an energetic, direct, ambitious and approachable way. Its style combines digital expertise with an informal, action-oriented attitude.",
+    "traits": [
+      "Energetic and enthusiastic",
+      "Direct and action-oriented",
+      "Confident and ambitious",
+      "Approachable and human",
+      "Innovative and future-focused",
+      "Collaborative",
+      "Results-driven"
+    ],
+    "writing_guidelines": [
+      "Write actively and address the reader directly using 'you' and 'your'.",
+      "Clearly explain which customer problem is being solved and what results it delivers.",
+      "Use accessible language and explain technical topics in practical terms.",
+      "Be optimistic and forward-thinking without relying on empty hype.",
+      "Keep copy engaging, clear and to the point.",
+      "Emphasise collaboration, action and progress."
+    ],
+    "avoid": [
+      "Unnecessarily formal or distant language",
+      "Technical jargon without explanation",
+      "Vague marketing claims without tangible value",
+      "Passive phrasing and unnecessary detours",
+      "AI hype that overlooks human control and customer value"
+    ]
+  },
+  "content_principles": {
+    "primary_audience": "Organisations and brands looking to achieve digital growth, transformation, marketing results or technological innovation.",
+    "message_hierarchy": [
+      "Start with the customer and their challenge.",
+      "Explain how strategy, creativity and technology come together to create the solution.",
+      "Make the added value and expected results tangible.",
+      "Show how collaboration and execution work in practice.",
+      "Support claims with data, case studies or measurable results wherever possible."
+    ],
+    "ai_and_automation": [
+      "Position AI as practical technology that supports customer and business objectives.",
+      "Make clear that AI can be part of the solution from the start, rather than simply an added feature afterwards.",
+      "Emphasise that people remain in control.",
+      "Optimise digital content and platforms for discoverability and clarity for both people and AI systems."
+    ]
+  },
+  "editorial_context": {
+    "use": "Use this file as brand context when developing and evaluating Goldfizh content.",
+    "accuracy_note": "This JSON file is a structured interpretation and summary of Goldfizh's publicly available website. The brand vision and values are based on explicit statements from Goldfizh, while the tone-of-voice and content guidelines are derived from its communication style.",
+    "sources": [
+      {
+        "url": "https://www.goldfizh.nl/",
+        "used_for": "Positioning, customer focus, services and overall brand messaging."
+      },
+      {
+        "url": "https://www.goldfizh.nl/about",
+        "used_for": "Vision, iGen, beliefs, core values and working methodology."
+      },
+      {
+        "url": "https://www.goldfizh.nl/services/technologie-ai",
+        "used_for": "Technology and AI vision, services and the Research-Discovery-Build-Grow approach."
+      }
+    ],
+    "retrieved_at": "2026-11-13"
+  }
+}
