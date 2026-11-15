@@ -1,7 +1,10 @@
 import { unstable_cache } from "next/cache";
 
 import { mockPages } from "@/data/mock-pages";
-import { getWebsiteFallbackUrl } from "@/lib/env/website-fallback-url";
+import {
+  getWebsiteFallbackUrl,
+  getWebsiteFallbackUrlAtRequest,
+} from "@/lib/env/website-fallback-url";
 import { discoverTopGrossingPages } from "@/lib/scraper/discover-top-pages";
 import type { PageContext, PageListItem } from "@/types/context";
 
@@ -31,6 +34,12 @@ function cachedPagesForBase(baseUrl: string): Promise<PageContext[]> {
 /** Resolves full page records (scraped from the active client site, else mocks). */
 export async function loadPageContexts(): Promise<PageContext[]> {
   const baseUrl = await getWebsiteFallbackUrl();
+  return cachedPagesForBase(baseUrl);
+}
+
+/** Request-time variant (includes httpOnly demo-client cookie). */
+export async function loadPageContextsAtRequest(): Promise<PageContext[]> {
+  const baseUrl = await getWebsiteFallbackUrlAtRequest();
   return cachedPagesForBase(baseUrl);
 }
 

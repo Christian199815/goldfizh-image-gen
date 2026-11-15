@@ -147,8 +147,16 @@ function buildActiveClientConfiguration(clientId: string): ActiveClientConfigura
   };
 }
 
-/** Active demo client for the current request (React cache). */
+/** Active demo client for static render and cached paths (no `cookies()`). */
 export const getActiveClientConfiguration = cache(
+  async (): Promise<ActiveClientConfiguration> => {
+    const clientId = await resolveDemoClientId();
+    return buildActiveClientConfiguration(clientId);
+  },
+);
+
+/** Request-time demo client (includes httpOnly cookie). For Route Handlers only. */
+export const getActiveClientConfigurationAtRequest = cache(
   async (): Promise<ActiveClientConfiguration> => {
     const clientId = await resolveDemoClientIdAtRequest();
     return buildActiveClientConfiguration(clientId);
