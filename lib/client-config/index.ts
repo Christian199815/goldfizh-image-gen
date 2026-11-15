@@ -150,7 +150,7 @@ function buildActiveClientConfiguration(clientId: string): ActiveClientConfigura
 /** Active demo client for the current request (React cache). */
 export const getActiveClientConfiguration = cache(
   async (): Promise<ActiveClientConfiguration> => {
-    const clientId = await resolveDemoClientId();
+    const clientId = await resolveDemoClientIdAtRequest();
     return buildActiveClientConfiguration(clientId);
   },
 );
@@ -175,9 +175,8 @@ function capitalizeDemoClientId(clientId: string): string {
 }
 
 async function getActiveDemoBrandLabel(): Promise<string> {
-  const clientId = await resolveDemoClientId();
-  const profile = getBrandProfile(clientId);
-  return profile?.brandName ?? capitalizeDemoClientId(clientId);
+  const { profile, clientId } = await getActiveClientConfiguration();
+  return profile.brandName ?? capitalizeDemoClientId(clientId);
 }
 
 /** Header brand label for the active demo client. */

@@ -1,7 +1,7 @@
 import { cache } from "react";
 
 import { getBrandProfile } from "@/data/brands";
-import { resolveDemoClientId } from "@/lib/client-config";
+import { resolveDemoClientIdAtRequest } from "@/lib/client-config";
 
 const DEFAULT_WEBSITE_FALLBACK_URL = "https://www.goldfizh.nl/";
 
@@ -21,7 +21,7 @@ function normalizeSiteUrl(candidate: string, fallback: string): string {
 export const getWebsiteFallbackUrl = cache(async (): Promise<string> => {
   let demoClientId: string | undefined;
   try {
-    demoClientId = await resolveDemoClientId();
+    demoClientId = await resolveDemoClientIdAtRequest();
   } catch {
     demoClientId = undefined;
   }

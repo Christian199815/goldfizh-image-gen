@@ -57,18 +57,7 @@ export function useGeneratorForm(
     }
     previousClientContextKey.current = clientContextKey;
 
-    setValues((current) => ({
-      ...current,
-      pageId: pages.some((page) => page.id === current.pageId)
-        ? current.pageId
-        : (pages[0]?.id ?? ""),
-      brandSegment: brandSegments.some(
-        (segment) => segment.id === current.brandSegment,
-      )
-        ? current.brandSegment
-        : (brandSegments[0]?.id ?? ""),
-      mainColor: getDefaultMainColor(brandColors),
-    }));
+    setValues(buildInitialFormState(pages, brandSegments, brandColors));
   }, [clientContextKey, pages, brandSegments, brandColors]);
 
   const setField = useCallback(

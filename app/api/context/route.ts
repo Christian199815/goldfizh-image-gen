@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { connection } from "next/server";
 
 import { DemoClientConfigError } from "@/lib/client-config";
 import { buildContextApiResponse } from "@/lib/context/public-api";
 
 export async function GET() {
+  await connection();
   try {
     const payload = await buildContextApiResponse();
     return NextResponse.json(payload, { status: 200 });

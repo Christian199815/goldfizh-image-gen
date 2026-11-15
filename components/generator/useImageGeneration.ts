@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   DEMO_CLIENT_CHANGED_EVENT,
@@ -209,6 +209,46 @@ export function useImageGeneration(options?: UseImageGenerationOptions) {
     };
   }, [fetchContextFromApi, shouldSkipInitialFetch]);
 
+  const initialContextKey = useMemo(
+    () =>
+      [
+        initialPages?.map((page) => page.id).join(","),
+        initialBrandSegments?.map((segment) => segment.id).join(","),
+        initialBrandColors?.map((color) => color.hex).join(","),
+      ].join("|"),
+    [initialPages, initialBrandSegments, initialBrandColors],
+  );
+
+  const previousInitialContextKey = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (
+      !initialPages?.length ||
+      !initialBrandSegments?.length ||
+      !initialBrandColors?.length
+    ) {
+      return;
+    }
+    if (previousInitialContextKey.current === null) {
+      previousInitialContextKey.current = initialContextKey;
+      return;
+    }
+    if (previousInitialContextKey.current === initialContextKey) {
+      return;
+    }
+    previousInitialContextKey.current = initialContextKey;
+    setPages(initialPages);
+    setBrandSegments(initialBrandSegments);
+    setBrandColors(initialBrandColors);
+    setContextLoadState("ready");
+    setContextError(null);
+  }, [
+    initialContextKey,
+    initialPages,
+    initialBrandSegments,
+    initialBrandColors,
+  ]);
+
   useEffect(() => {
     const onDemoClientChanged = () => {
       void loadContext();
@@ -218,6 +258,24 @@ export function useImageGeneration(options?: UseImageGenerationOptions) {
       window.removeEventListener(DEMO_CLIENT_CHANGED_EVENT, onDemoClientChanged);
     };
   }, [loadContext]);
+
+  const previousDemoClientId = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const activeId = devMode?.demoClient?.activeClientId;
+    if (!activeId) {
+      return;
+    }
+    if (previousDemoClientId.current === undefined) {
+      previousDemoClientId.current = activeId;
+      return;
+    }
+    if (previousDemoClientId.current === activeId) {
+      return;
+    }
+    previousDemoClientId.current = activeId;
+    void loadContext();
+  }, [devMode?.demoClient?.activeClientId, loadContext]);
 
   useEffect(() => {
     return () => {
