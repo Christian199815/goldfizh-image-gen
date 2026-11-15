@@ -5,6 +5,8 @@ import { mockPages } from "@/data/mock-pages";
 import { getClientBrandKnowledgeForProfile } from "@/lib/brand-knowledge";
 import type { ImageGenerationInput } from "@/types/generation";
 
+import { promptMustNotExposeOperatorBrandName } from "@/lib/goldfizh/provider-safe-operator-text";
+
 import { buildImagePrompt } from "../prompt-builder";
 
 /** Shared creative brief for cross-client brand differentiation checks. */
@@ -86,6 +88,8 @@ export function assertBrandAwarePromptsForDemoClients(): void {
 
     const prompt = promptForClient(profile.id, primaryHex);
     prompts.set(profile.id, prompt);
+
+    promptMustNotExposeOperatorBrandName(prompt);
 
     if (!prompt.includes(BRAND_TEST_IMAGE_REQUEST)) {
       throw new Error(`${profile.id}: prompt must preserve the user image request.`);

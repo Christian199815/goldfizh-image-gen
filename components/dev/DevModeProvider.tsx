@@ -26,6 +26,7 @@ import {
   type DevModelDefinition,
 } from "@/lib/dev/model-catalog";
 import { isClientDevToolsEnabled } from "@/lib/dev/client-dev";
+import { isDevPanelKeyboardShortcut } from "@/lib/dev/dev-panel-shortcut";
 import type {
   DevDemoClientInfo,
   DevLimits,
@@ -160,7 +161,9 @@ function usePersistedDevState() {
 
 export function DevModeProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const available = isClientDevToolsEnabled();
+  const [runtimeAvailable, setRuntimeAvailable] = useState(false);
+  const builtInAvailable = isClientDevToolsEnabled();
+  const available = builtInAvailable || runtimeAvailable;
   const { state, updatePersisted } = usePersistedDevState();
   const { enabled, settings, session } = state;
   const [panelOpen, setPanelOpen] = useState(false);
@@ -272,6 +275,45 @@ export function DevModeProvider({ children }: { children: ReactNode }) {
       return { ...prev, enabled: nextEnabled };
     });
   }, [updatePersisted]);
+
+  const unlockRuntimeDevTools = useCallback(async (): Promise<boolean> => {
+    if (builtInAvailable || runtimeAvailable) {
+      return true;
+    }
+    try {
+      const response = await fetch("/api/dev/config");
+      if (!response.ok) {
+        return false;
+      }
+      setRuntimeAvailable(true);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [builtInAvailable, runtimeAvailable]);
+
+  const openDevPanel = useCallback(async () => {
+    const unlocked = await unlockRuntimeDevTools();
+    if (!unlocked) {
+      return;
+    }
+    updatePersisted((prev) =>
+      prev.enabled ? prev : { ...prev, enabled: true },
+    );
+    setPanelOpen(true);
+  }, [unlockRuntimeDevTools, updatePersisted]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (!isDevPanelKeyboardShortcut(event)) {
+        return;
+      }
+      event.preventDefault();
+      void openDevPanel();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [openDevPanel]);
 
   const setImageProvider = useCallback(
     (provider: ImageProviderId) => {
@@ -522,10 +564,6 @@ export function DevModeProvider({ children }: { children: ReactNode }) {
       setDemoClientId,
     ],
   );
-
-  if (!available) {
-    return <>{children}</>;
-  }
 
   return (
     <DevModeContext.Provider value={value}>{children}</DevModeContext.Provider>

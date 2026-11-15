@@ -1,3 +1,7 @@
+import {
+  neutralizeOperatorBrandInPromptText,
+  promptMustNotExposeOperatorBrandName,
+} from "@/lib/goldfizh/provider-safe-operator-text";
 import type { ClientBrandKnowledge } from "@/types/brand-knowledge";
 import type {
   BrandSegment,
@@ -58,5 +62,7 @@ export function composeImagePrompt({
     buildCompositionSection(input.format, aspectRatio),
   ];
 
-  return sections.join("\n\n");
+  const prompt = neutralizeOperatorBrandInPromptText(sections.join("\n\n"));
+  promptMustNotExposeOperatorBrandName(prompt);
+  return prompt;
 }

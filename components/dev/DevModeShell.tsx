@@ -10,7 +10,7 @@ import { useDevMode } from "./DevModeProvider";
 export function DevModeShell() {
   const dev = useDevMode();
 
-  if (!dev) {
+  if (!dev?.available) {
     return null;
   }
 
@@ -33,6 +33,7 @@ export function DevModeShell() {
             <button
               type="button"
               onClick={() => setPanelOpen(true)}
+              title="Open dev panel (⌘⇧D or Ctrl+Shift+D)"
               className="flex items-center gap-2 rounded-full border border-gf-panel-border bg-gf-panel px-4 py-2 text-sm font-medium text-gf-heading shadow-md transition-colors hover:bg-gf-option focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gf-brand"
             >
               <Gauge className="h-4 w-4 text-gf-brand" aria-hidden />

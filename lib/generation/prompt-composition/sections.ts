@@ -14,7 +14,8 @@ import type {
 
 export const PROMPT_SECTION = {
   userRequest: "1. User image request (primary creative intent)",
-  goldfizh: "2. Goldfizh professional safeguard (operator—not visual brand)",
+  operatorSafeguard:
+    "2. Platform operator safeguard (professional rules—not visual brand)",
   brandPositioning: "3. Client brand positioning and personality",
   brandColors: "4. Brand colours and visual identity",
   photography: "5. Photography and composition guidelines",
@@ -31,7 +32,7 @@ const STYLE_GUIDANCE: Record<ImageStyle, string> = {
   abstract:
     "Non-literal forms, texture, light and organic shapes; suggest mood and brand without a literal product tableau.",
   other:
-    "Follow the user's intent while staying within mandatory brand and Goldfizh quality rules below.",
+    "Follow the user's intent while staying within mandatory brand and professional quality rules below.",
 };
 
 const COLOR_MODE_GUIDANCE: Record<ColorMode, string> = {
@@ -104,8 +105,8 @@ export function buildGoldfizhSection(goldfizh: GoldfizhContext): string {
       : "";
 
   return [
-    PROMPT_SECTION.goldfizh,
-    "Goldfizh operates this tool but its own branding and tone must not appear in generated images. Client brand and user intent drive look and mood.",
+    PROMPT_SECTION.operatorSafeguard,
+    "The platform operator runs this tool but its own name, logos, colours, and tone must never appear in generated pixels. Only the active client's brand identity—including their authentic logos when appropriate for marketing—may appear in-frame. Client brand and user intent drive look and mood.",
     goldfizh.creativeVision,
     "Safeguard rules:",
     bulletLines(goldfizh.imageGuidelines),
@@ -139,7 +140,7 @@ export function buildBrandColorsSection(brand: ClientBrandKnowledge): string {
     brand.logoAndVisualIdentity,
     "Palette (use intentionally; not every colour must dominate each image):",
     palette,
-    "Brand identity must stay recognisable through palette discipline and mood—not via invented logos, wordmarks or on-image typography.",
+    "Brand identity must stay recognisable through palette discipline and mood. If a logo belongs in the scene, use only the client's authentic marks described above—never invent alternate wordmarks, never add platform-operator or third-party agency branding, and avoid unrelated trademarked logos unless the user request requires them.",
   ].join("\n");
 }
 
@@ -232,7 +233,7 @@ export function buildUserChoicesSection(
     describeStyleChoice(input),
     describeColorModeChoice(input),
     `Main colour: ${mainColorLine}`,
-    "These choices refine execution; they must not silently contradict mandatory brand rules or Goldfizh quality principles.",
+    "These choices refine execution; they must not silently contradict mandatory brand rules or professional quality principles.",
   ].join("\n");
 }
 
@@ -246,6 +247,8 @@ export function buildCompositionSection(
     "One clear focal subject; generous negative space where appropriate; legible at thumbnail size.",
     "Avoid cluttered layouts, generic stock clichés, and unsubstantiated claims.",
     "If people appear, use natural, diverse presence—no exaggerated posing.",
-    "Do not add text, logos, watermarks or UI chrome unless the user request explicitly asks for them.",
+    "Critical: no readable on-image text naming the platform operator, the tool, or any agency—models must not render operator branding as typography.",
+    "Client brand logos and wordmarks may appear only when consistent with the client visual identity section above; no generic watermarks, UI chrome, or invented slogans.",
+    "Avoid extra caption text, URLs, hashtags, or disclaimers unless the user request explicitly requires them.",
   ].join("\n");
 }

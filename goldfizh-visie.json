@@ -141,7 +141,7 @@
     ],
     "quality_floor": [
       "Production-ready standard suitable for client websites, ads and social channels",
-      "No embedded text, logos or watermarks inside the frame unless the user or client brief explicitly requires them",
+      "No embedded text, unrelated logos, operator branding, or watermarks inside the frame; client brand marks are allowed when consistent with the active client brief",
       "Composition legible at thumbnail size when used in CMS and social previews",
       "Prefer clear subject and intentional lighting; avoid cluttered or unreadable layouts"
     ]
