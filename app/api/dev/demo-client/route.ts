@@ -6,6 +6,7 @@ import {
   resolveDemoClientId,
   supportedDemoClientIds,
 } from "@/lib/client-config";
+import { writeDemoClientCookie } from "@/lib/dev/demo-client-cookie.server";
 import { isServerDevToolsEnabled } from "@/lib/dev/server-dev";
 
 export async function PATCH(request: Request) {
@@ -33,8 +34,10 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    applyDevDemoClientOverride(clientId.trim());
-    return NextResponse.json({ activeClientId: resolveDemoClientId() });
+    const normalized = clientId.trim();
+    applyDevDemoClientOverride(normalized);
+    await writeDemoClientCookie(normalized);
+    return NextResponse.json({ activeClientId: await resolveDemoClientId() });
   } catch (error) {
     if (error instanceof DemoClientConfigError) {
       return NextResponse.json({ error: error.message }, { status: 400 });

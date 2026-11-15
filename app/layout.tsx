@@ -11,9 +11,9 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: getImageGeneratorPageTitle(),
+    title: await getImageGeneratorPageTitle(),
     description:
       "Generate brand-consistent marketing images with Goldfizh Content OS.",
   };

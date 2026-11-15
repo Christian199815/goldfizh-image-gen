@@ -153,10 +153,9 @@ export function DevModePanel() {
               />
             </FormField>
             <p className="text-xs text-gf-text">
-              Chooses brand, pages, and prompts for local dev. Saved in{" "}
-              <code className="text-gf-heading">.local/demo-client.json</code>{" "}
-              (no <code className="text-gf-heading">.env</code> or server
-              restart).
+              Chooses brand, pages, and prompts. Persisted in an httpOnly cookie
+              on deployed hosts; locally also in{" "}
+              <code className="text-gf-heading">.local/demo-client.json</code>.
             </p>
           </section>
         ) : null}

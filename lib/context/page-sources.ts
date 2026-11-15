@@ -8,7 +8,7 @@ import type { PageContext, PageListItem } from "@/types/context";
 const PAGE_CACHE_SECONDS = 3600;
 
 async function scrapeOrMockPages(): Promise<PageContext[]> {
-  const baseUrl = getWebsiteFallbackUrl();
+  const baseUrl = await getWebsiteFallbackUrl();
   try {
     const scraped = await discoverTopGrossingPages(baseUrl, 3);
     if (scraped.length > 0) {
@@ -30,7 +30,7 @@ function cachedPagesForBase(baseUrl: string): Promise<PageContext[]> {
 
 /** Resolves full page records (scraped from the active client site, else mocks). */
 export async function loadPageContexts(): Promise<PageContext[]> {
-  const baseUrl = getWebsiteFallbackUrl();
+  const baseUrl = await getWebsiteFallbackUrl();
   return cachedPagesForBase(baseUrl);
 }
 

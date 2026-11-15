@@ -36,7 +36,7 @@ function aspectRatioFromFormat(format: ImageFormat): ImageAspectRatio {
 export async function generateImageFromInput(
   input: ImageGenerationInputParsed,
 ): Promise<GenerationResponse> {
-  const clientResult = getClientContext(getActiveTenantId());
+  const clientResult = await getClientContext(await getActiveTenantId());
   if (!clientResult.ok) {
     throw new Error("Server tenant context is misconfigured.");
   }
@@ -57,7 +57,7 @@ export async function generateImageFromInput(
 
   const prompt = buildImagePrompt({
     goldfizh: getGoldfizhContext(),
-    brand: getActiveClientBrandKnowledge(),
+    brand: await getActiveClientBrandKnowledge(),
     client: clientResult.client,
     page: pageResult.page,
     input,

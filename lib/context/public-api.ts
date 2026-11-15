@@ -10,10 +10,10 @@ import {
 export { contextApiResponseSchema } from "./context-api-schema";
 
 export async function buildContextApiResponse(): Promise<ContextApiResponse> {
-  const { brandColors } = getDefaultClientContext();
+  const { brandColors } = await getDefaultClientContext();
   const payload: ContextApiResponse = {
     pages: await getAvailablePages(),
-    brandSegments: getBrandSegments(),
+    brandSegments: await getBrandSegments(),
     brandColors: [...brandColors],
   };
   return contextApiResponseSchema.parse(payload);

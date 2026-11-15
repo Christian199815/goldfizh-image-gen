@@ -43,7 +43,7 @@ async function main(): Promise<void> {
   for (const profile of brandProfiles) {
     applyDevDemoClientOverride(profile.id);
 
-    const clientResult = getClientContext(`tenant-${profile.id}`);
+    const clientResult = await getClientContext(`tenant-${profile.id}`);
     if (!clientResult.ok) {
       throw new Error(`Client context failed for ${profile.id}`);
     }
@@ -65,7 +65,7 @@ async function main(): Promise<void> {
     };
     const prompt = buildImagePrompt({
       goldfizh: getGoldfizhContext(),
-      brand: getActiveClientBrandKnowledge(),
+      brand: await getActiveClientBrandKnowledge(),
       client: clientResult.client,
       page,
       input,

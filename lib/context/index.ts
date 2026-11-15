@@ -26,8 +26,10 @@ export function getGoldfizhContext(): GoldfizhContext {
  * Resolves client brand knowledge for a tenant.
  * In the PoC only the server-selected demo tenant ({@link getActiveTenantId}) is valid.
  */
-export function getClientContext(tenantId: string): GetClientContextResult {
-  const active = getActiveClientConfiguration();
+export async function getClientContext(
+  tenantId: string,
+): Promise<GetClientContextResult> {
+  const active = await getActiveClientConfiguration();
   if (tenantId !== active.tenantId) {
     return { ok: false, reason: "unknown_tenant", tenantId };
   }
@@ -38,15 +40,15 @@ export function getClientContext(tenantId: string): GetClientContextResult {
   };
 }
 
-export function getDefaultClientContext(): ClientBrandContext {
-  return getActiveClientConfiguration().client;
+export async function getDefaultClientContext(): Promise<ClientBrandContext> {
+  return (await getActiveClientConfiguration()).client;
 }
 
-function withResolvedPageUrl(page: PageContext): PageContext {
+async function withResolvedPageUrl(page: PageContext): Promise<PageContext> {
   if (page.url.startsWith("http://") || page.url.startsWith("https://")) {
     return page;
   }
-  return { ...page, url: resolveWebsitePageUrl(page.url) };
+  return { ...page, url: await resolveWebsitePageUrl(page.url) };
 }
 
 export async function getPageContext(
@@ -58,20 +60,22 @@ export async function getPageContext(
   if (!page) {
     return { ok: false, reason: "not_found", pageId: normalized };
   }
-  return { ok: true, page: withResolvedPageUrl(page) };
+  return { ok: true, page: await withResolvedPageUrl(page) };
 }
 
-export function getBrandSegments(): BrandSegment[] {
-  return getActiveClientConfiguration().brandSegments;
+export async function getBrandSegments(): Promise<BrandSegment[]> {
+  return (await getActiveClientConfiguration()).brandSegments;
 }
 
 export async function getAvailablePages(): Promise<PageListItem[]> {
   const pages = await loadPageContexts();
-  return pages.map((page) => {
-    const { id, label } = page;
-    const resolved = withResolvedPageUrl(page);
-    return { id, label, url: resolved.url };
-  });
+  return Promise.all(
+    pages.map(async (page) => {
+      const { id, label } = page;
+      const resolved = await withResolvedPageUrl(page);
+      return { id, label, url: resolved.url };
+    }),
+  );
 }
 
 /** Server-side lookup of full page records (e.g. prompt building). */

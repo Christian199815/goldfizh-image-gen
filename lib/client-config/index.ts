@@ -5,12 +5,17 @@ import {
 } from "@/data/brands";
 import "server-only";
 
-import { setDevDemoClientOverride } from "@/lib/dev/demo-client-override";
+import { cache } from "react";
+
 import {
-  getHydratedDevDemoClientOverride,
-  ensureDevDemoClientHydrated,
-} from "@/lib/dev/ensure-demo-client-hydrated.server";
-import { writePersistedDemoClientId } from "@/lib/dev/demo-client-persistence.server";
+  getDevDemoClientOverride,
+  setDevDemoClientOverride,
+} from "@/lib/dev/demo-client-override";
+import { readDemoClientCookie } from "@/lib/dev/demo-client-cookie.server";
+import {
+  readPersistedDemoClientId,
+  writePersistedDemoClientId,
+} from "@/lib/dev/demo-client-persistence.server";
 import { isServerDevToolsEnabled } from "@/lib/dev/server-dev";
 import { formatImageGeneratorPageTitle } from "@/lib/client-config/page-title";
 import { brandProfileToClientBrandKnowledge } from "@/lib/brand-knowledge/from-brand-profile";
@@ -53,35 +58,41 @@ function resolveProductionDemoClientId(): string {
 }
 
 /**
- * Active demo client id. With dev tools, chosen via the dev panel (persisted under `.local/`).
+ * Active demo client id. With dev tools, chosen via the dev panel (httpOnly cookie + `.local/` on disk).
  * Without dev tools (e.g. Railway build), uses the first registered profile so prerender can finish.
  */
-export function resolveDemoClientId(): string {
+export const resolveDemoClientId = cache(async (): Promise<string> => {
   if (!isServerDevToolsEnabled()) {
     return resolveProductionDemoClientId();
   }
 
-  ensureDevDemoClientHydrated();
+  const inMemory = getDevDemoClientOverride()?.trim();
+  if (inMemory) {
+    return assertDemoClientId(inMemory);
+  }
 
-  const selected = getHydratedDevDemoClientOverride()?.trim();
-  if (selected) {
-    return assertDemoClientId(selected);
+  const fromCookie = await readDemoClientCookie();
+  if (fromCookie) {
+    return assertDemoClientId(fromCookie);
+  }
+
+  const fromFile = readPersistedDemoClientId();
+  if (fromFile) {
+    return assertDemoClientId(fromFile);
   }
 
   const defaultId = supportedDemoClientIds[0];
   if (!defaultId) {
     throw new DemoClientConfigError("No demo client profiles are registered.");
   }
-  applyDevDemoClientOverride(defaultId);
   return assertDemoClientId(defaultId);
-}
+});
 
-/** Dev panel: switch active client (persisted locally, no server restart). */
+/** Dev panel: switch active demo client (cookie + local file, no server restart). */
 export function applyDevDemoClientOverride(clientId: string): void {
   assertDemoClientId(clientId);
   setDevDemoClientOverride(clientId);
   writePersistedDemoClientId(clientId);
-  resetActiveClientConfigurationCache();
 }
 
 /** Stable tenant key for the PoC; later maps to Supabase tenant rows by client id. */
@@ -97,13 +108,6 @@ export type ActiveClientConfiguration = {
   client: ClientBrandContext;
   brandSegments: BrandSegment[];
 };
-
-let cachedActiveConfig: ActiveClientConfiguration | null = null;
-
-/** Clears process cache after the dev panel changes the active demo client. */
-export function resetActiveClientConfigurationCache(): void {
-  cachedActiveConfig = null;
-}
 
 function buildActiveClientConfiguration(clientId: string): ActiveClientConfiguration {
   const profile = getBrandProfile(clientId);
@@ -123,27 +127,24 @@ function buildActiveClientConfiguration(clientId: string): ActiveClientConfigura
   };
 }
 
-/**
- * Active demo client from the dev panel, cached for the process lifetime until switched.
- */
-export function getActiveClientConfiguration(): ActiveClientConfiguration {
-  if (!cachedActiveConfig) {
-    const clientId = resolveDemoClientId();
-    cachedActiveConfig = buildActiveClientConfiguration(clientId);
-  }
-  return cachedActiveConfig;
+/** Active demo client for the current request (React cache). */
+export const getActiveClientConfiguration = cache(
+  async (): Promise<ActiveClientConfiguration> => {
+    const clientId = await resolveDemoClientId();
+    return buildActiveClientConfiguration(clientId);
+  },
+);
+
+export async function getActiveBrandProfile(): Promise<BrandProfile> {
+  return (await getActiveClientConfiguration()).profile;
 }
 
-export function getActiveBrandProfile(): BrandProfile {
-  return getActiveClientConfiguration().profile;
+export async function getActiveTenantId(): Promise<string> {
+  return (await getActiveClientConfiguration()).tenantId;
 }
 
-export function getActiveTenantId(): string {
-  return getActiveClientConfiguration().tenantId;
-}
-
-export function getActiveClientBrandContext(): ClientBrandContext {
-  return getActiveClientConfiguration().client;
+export async function getActiveClientBrandContext(): Promise<ClientBrandContext> {
+  return (await getActiveClientConfiguration()).client;
 }
 
 function capitalizeDemoClientId(clientId: string): string {
@@ -153,18 +154,23 @@ function capitalizeDemoClientId(clientId: string): string {
   return clientId.charAt(0).toUpperCase() + clientId.slice(1);
 }
 
-function getActiveDemoBrandLabel(): string {
-  const clientId = resolveDemoClientId();
+async function getActiveDemoBrandLabel(): Promise<string> {
+  const clientId = await resolveDemoClientId();
   const profile = getBrandProfile(clientId);
   return profile?.brandName ?? capitalizeDemoClientId(clientId);
 }
 
 /** Header brand label for the active demo client. */
-export function getImageGeneratorBrandLabel(): string {
+export const getImageGeneratorBrandLabel = cache(async (): Promise<string> => {
   return getActiveDemoBrandLabel();
-}
+});
 
 /** Browser tab and shell title for the generator UI. */
-export function getImageGeneratorPageTitle(): string {
-  return formatImageGeneratorPageTitle(getActiveDemoBrandLabel());
+export const getImageGeneratorPageTitle = cache(async (): Promise<string> => {
+  return formatImageGeneratorPageTitle(await getActiveDemoBrandLabel());
+});
+
+/** Cookie or on-disk persistence id for the dev panel (excludes in-request override). */
+export async function getPersistedDemoClientSelection(): Promise<string | null> {
+  return (await readDemoClientCookie()) ?? readPersistedDemoClientId();
 }

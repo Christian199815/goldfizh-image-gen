@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { getImageProviderAvailability } from "@/lib/ai/server-provider-availability";
-import { resolveDemoClientId } from "@/lib/client-config";
+import {
+  getPersistedDemoClientSelection,
+  resolveDemoClientId,
+} from "@/lib/client-config";
 import { brandProfiles } from "@/data/brands";
-import { getHydratedDevDemoClientOverride } from "@/lib/dev/ensure-demo-client-hydrated.server";
 import { isServerDevToolsEnabled } from "@/lib/dev/server-dev";
 
 export async function GET() {
@@ -17,8 +19,8 @@ export async function GET() {
     defaultModelId,
     imageProviders: getImageProviderAvailability(),
     demoClient: {
-      activeClientId: resolveDemoClientId(),
-      persistedClientId: getHydratedDevDemoClientOverride(),
+      activeClientId: await resolveDemoClientId(),
+      persistedClientId: await getPersistedDemoClientSelection(),
       clients: brandProfiles.map((profile) => ({
         id: profile.id,
         label: profile.brandName,

@@ -12,10 +12,10 @@ const CURRENT_STEP = 1;
 const TOTAL_STEPS = 2;
 
 export async function GeneratorPage() {
-  const brandLabel = getImageGeneratorBrandLabel();
-  const { brandColors } = getDefaultClientContext();
+  const brandLabel = await getImageGeneratorBrandLabel();
+  const { brandColors } = await getDefaultClientContext();
   const pages = await getAvailablePages();
-  const brandSegments = getBrandSegments();
+  const brandSegments = await getBrandSegments();
 
   return (
     <AppLayout

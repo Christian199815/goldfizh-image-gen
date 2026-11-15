@@ -12,8 +12,8 @@ export { brandProfileToClientBrandKnowledge } from "./from-brand-profile";
 /**
  * Resolves brand knowledge for the active demo tenant (central client configuration).
  */
-export function getActiveClientBrandKnowledge(): ClientBrandKnowledge {
-  return getActiveClientConfiguration().brandKnowledge;
+export async function getActiveClientBrandKnowledge(): Promise<ClientBrandKnowledge> {
+  return (await getActiveClientConfiguration()).brandKnowledge;
 }
 
 /**

@@ -1,6 +1,6 @@
 import { isServerDevToolsEnabled } from "@/lib/dev/server-dev";
 
-/** `undefined` = not hydrated yet from `.local/demo-client.json`. */
+/** `undefined` = no in-request override (use cookie / `.local/` via {@link resolveDemoClientId}). */
 let devDemoClientOverride: string | null | undefined;
 
 export function getDevDemoClientOverride(): string | null {

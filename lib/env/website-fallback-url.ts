@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { getBrandProfile } from "@/data/brands";
 import { resolveDemoClientId } from "@/lib/client-config";
 
@@ -16,10 +18,10 @@ function normalizeSiteUrl(candidate: string, fallback: string): string {
  * Uses the active demo client's `websiteUrl` when available; otherwise
  * `WEBSITE_FALLBACK_URL`, then the Goldfizh default.
  */
-export function getWebsiteFallbackUrl(): string {
+export const getWebsiteFallbackUrl = cache(async (): Promise<string> => {
   let demoClientId: string | undefined;
   try {
-    demoClientId = resolveDemoClientId();
+    demoClientId = await resolveDemoClientId();
   } catch {
     demoClientId = undefined;
   }
@@ -35,11 +37,11 @@ export function getWebsiteFallbackUrl(): string {
     return DEFAULT_WEBSITE_FALLBACK_URL;
   }
   return normalizeSiteUrl(raw, DEFAULT_WEBSITE_FALLBACK_URL);
-}
+});
 
 /** Joins a pathname with the configured fallback site origin. */
-export function resolveWebsitePageUrl(pathname: string): string {
-  const base = getWebsiteFallbackUrl();
+export async function resolveWebsitePageUrl(pathname: string): Promise<string> {
+  const base = await getWebsiteFallbackUrl();
   const normalized =
     pathname === "" || pathname === "/"
       ? "/"
