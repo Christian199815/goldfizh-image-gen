@@ -3,12 +3,15 @@ import { NextResponse } from "next/server";
 import { getImageProviderAvailability } from "@/lib/ai/server-provider-availability";
 import {
   getPersistedDemoClientSelection,
-  resolveDemoClientId,
+  resolveDemoClientIdAtRequest,
 } from "@/lib/client-config";
+import { connection } from "next/server";
 import { brandProfiles } from "@/data/brands";
 import { isServerDevToolsEnabled } from "@/lib/dev/server-dev";
 
 export async function GET() {
+  await connection();
+
   if (!isServerDevToolsEnabled()) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
@@ -19,7 +22,7 @@ export async function GET() {
     defaultModelId,
     imageProviders: getImageProviderAvailability(),
     demoClient: {
-      activeClientId: await resolveDemoClientId(),
+      activeClientId: await resolveDemoClientIdAtRequest(),
       persistedClientId: await getPersistedDemoClientSelection(),
       clients: brandProfiles.map((profile) => ({
         id: profile.id,

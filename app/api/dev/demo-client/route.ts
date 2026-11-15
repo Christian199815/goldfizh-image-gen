@@ -3,13 +3,16 @@ import { NextResponse } from "next/server";
 import {
   DemoClientConfigError,
   applyDevDemoClientOverride,
-  resolveDemoClientId,
+  resolveDemoClientIdAtRequest,
   supportedDemoClientIds,
 } from "@/lib/client-config";
+import { connection } from "next/server";
 import { writeDemoClientCookie } from "@/lib/dev/demo-client-cookie.server";
 import { isServerDevToolsEnabled } from "@/lib/dev/server-dev";
 
 export async function PATCH(request: Request) {
+  await connection();
+
   if (!isServerDevToolsEnabled()) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
@@ -37,7 +40,7 @@ export async function PATCH(request: Request) {
     const normalized = clientId.trim();
     applyDevDemoClientOverride(normalized);
     await writeDemoClientCookie(normalized);
-    return NextResponse.json({ activeClientId: await resolveDemoClientId() });
+    return NextResponse.json({ activeClientId: await resolveDemoClientIdAtRequest() });
   } catch (error) {
     if (error instanceof DemoClientConfigError) {
       return NextResponse.json({ error: error.message }, { status: 400 });

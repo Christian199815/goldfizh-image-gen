@@ -58,10 +58,34 @@ function resolveProductionDemoClientId(): string {
 }
 
 /**
- * Active demo client id. With dev tools, chosen via the dev panel (httpOnly cookie + `.local/` on disk).
- * Without dev tools (e.g. Railway build), uses the first registered profile so prerender can finish.
+ * Active demo client id for static prerender and cached server paths.
+ * Does not read `cookies()` so production builds with Cache Components can finish.
+ * With dev tools, uses in-request override and `.local/` persistence; httpOnly cookie
+ * is applied on request-time handlers via {@link resolveDemoClientIdAtRequest}.
  */
 export const resolveDemoClientId = cache(async (): Promise<string> => {
+  if (!isServerDevToolsEnabled()) {
+    return resolveProductionDemoClientId();
+  }
+
+  const inMemory = getDevDemoClientOverride()?.trim();
+  if (inMemory) {
+    return assertDemoClientId(inMemory);
+  }
+
+  const fromFile = readPersistedDemoClientId();
+  if (fromFile) {
+    return assertDemoClientId(fromFile);
+  }
+
+  return resolveProductionDemoClientId();
+});
+
+/**
+ * Demo client id at request time (includes httpOnly cookie). Use in Route Handlers and
+ * other request-scoped code — not during static prerender of pages.
+ */
+export const resolveDemoClientIdAtRequest = cache(async (): Promise<string> => {
   if (!isServerDevToolsEnabled()) {
     return resolveProductionDemoClientId();
   }
@@ -81,11 +105,7 @@ export const resolveDemoClientId = cache(async (): Promise<string> => {
     return assertDemoClientId(fromFile);
   }
 
-  const defaultId = supportedDemoClientIds[0];
-  if (!defaultId) {
-    throw new DemoClientConfigError("No demo client profiles are registered.");
-  }
-  return assertDemoClientId(defaultId);
+  return resolveProductionDemoClientId();
 });
 
 /** Dev panel: switch active demo client (cookie + local file, no server restart). */
