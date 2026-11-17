@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import type { BrandColor, BrandSegment, PageListItem } from "@/types/context";
 import type { ImageGenerationInput } from "@/types/generation";
@@ -32,6 +32,7 @@ export function GeneratorForm({
   onGenerate,
   onInputChange,
 }: GeneratorFormProps) {
+  const [advancedSettings, setAdvancedSettings] = useState(false);
   const { values, setField, canSubmit } = useGeneratorForm(
     pages,
     brandSegments,
@@ -57,22 +58,52 @@ export function GeneratorForm({
       aria-labelledby="settings-heading"
       className="flex w-full min-h-0 shrink-0 flex-col rounded-xl border border-gf-panel-border bg-gf-panel p-6 lg:w-[420px] lg:max-w-[420px]"
     >
-      <h2
-        id="settings-heading"
-        className="text-base font-semibold text-gf-heading"
-      >
-        Settings
-      </h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2
+          id="settings-heading"
+          className="text-base font-semibold text-gf-heading"
+        >
+          Settings
+        </h2>
+        <div className="flex shrink-0 items-center gap-2">
+          <span
+            id="advanced-settings-label"
+            className="text-xs font-medium text-gf-text"
+          >
+            Advanced
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={advancedSettings}
+            aria-labelledby="advanced-settings-label"
+            disabled={controlsDisabled}
+            onClick={() => setAdvancedSettings((current) => !current)}
+            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gf-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${
+              advancedSettings ? "bg-gf-brand" : "bg-gf-option"
+            }`}
+          >
+            <span
+              aria-hidden
+              className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                advancedSettings ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+      </div>
 
       <form
         onSubmit={handleSubmit}
         className="mt-6 flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto lg:max-h-full lg:px-1.5"
       >
-        <ImageRequestField
-          value={values.imageRequest}
-          disabled={controlsDisabled}
-          onChange={(imageRequest) => setField("imageRequest", imageRequest)}
-        />
+        {advancedSettings ? (
+          <ImageRequestField
+            value={values.imageRequest}
+            disabled={controlsDisabled}
+            onChange={(imageRequest) => setField("imageRequest", imageRequest)}
+          />
+        ) : null}
 
         <PageUrlSelect
           pages={pages}
